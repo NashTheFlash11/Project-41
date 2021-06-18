@@ -46,6 +46,16 @@ class Game{
         var index =0;
         drawSprites();
 
+        if(player.index !== null){
+            for(var i = 0; i < fruitGroup.length; i++){
+                if(fruitGroup.get(i).isTouching(players)){
+                    fruitGroup.get(i).destroy();
+                    player.score = player.score + 1;
+                    player.update();
+                }
+            }
+        }
+
         for(var plr in allPlayers){
         
             index = index+1;
@@ -56,24 +66,29 @@ class Game{
             players[index - 1].y = y;
 
             // Differentiate the main player by printing
-            // the name of the player on the basket.
+            // the name of the player on the basket. 
             if(index === player.index){
                 fill("black");
                 textSize(25);
                 text(allPlayers[plr].name, x-25, y+25);
             }
+            textSize(25);
+            fill("white");
+            text("Player 1: " + allPlayers.player1.score, 50, 50);
+            text("Player 2: " + allPlayers.player2.score, 50, 100);
         }
 
 
+        // Give movements for the players using arrow keys
         if(keyIsDown(RIGHT_ARROW) && player.index !== null){
             player.distance += 10;
             player.update();
-          }
-        
-          if(keyIsDown(LEFT_ARROW) && player.index !== null){
+        }
+
+        if(keyIsDown(LEFT_ARROW) && player.index !== null){
             player.distance -= 10;
             player.update();
-          }
+        }
 
 
         // Create and spawn fruits randomly
@@ -96,10 +111,17 @@ class Game{
             fruitGroup.add(fruits);
         }
 
+        if(player.score >= 10){
+            this.end();
+        }
         
     }
 
     end(){
-       console.log("Game Ended");
+        game.update(2);
+        clear();
+        fill("blue");
+        textSize(40);
+        text("Game Over", 250, 300);
     }
 }
